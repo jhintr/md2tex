@@ -1,0 +1,57 @@
+\usepackage[top=28mm, bottom=22mm, left=25mm, right=25mm]{geometry}
+\usepackage{parskip}
+\setlength{\parskip}{1em}
+\setlength{\parindent}{0mm}
+
+\linespread{1.5}
+
+\zihao{5}
+\ziju{0.05}
+\ctexset{
+    chapter/numbering = false,
+    chapter/format += \Large,
+    section/numbering = false,
+    section/format += \large\raggedright,
+    tocdepth = section,
+    contentsname = 目次,
+}
+
+\usepackage{titlesec} % for customizing section headings
+\titlespacing*{\section}{0pt}{6mm plus 1mm minus 1mm}{5mm plus 1mm minus 1mm} % set spacing around section headings
+\setcounter{secnumdepth}{0} % remove section numbering
+
+\usepackage{quoting} % for setting quote margins
+\quotingsetup{
+    leftmargin=2em,
+    rightmargin=0em,
+    font=small,
+}
+
+\usepackage{fancyhdr}
+\fancyhf{}
+% \fancyhead[LE,RO]{\small \thepage} % page number on even (L) and odd (R) pages
+% \fancyhead[RE]{\small \leftmark} % chapter title on even pages
+% \fancyhead[LO]{\small \rightmark} % section title on odd pages
+\fancyhead[RO]{\small \rightmark \hspace{5mm} \thepage}
+\fancyhead[LE]{\small \thepage \hspace{5mm} \leftmark}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\fancypagestyle{plain}{% define first page of a chapter
+    \fancyhf{}
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}
+    \fancyfoot[C]{\small \thepage}
+}
+\fancypagestyle{empty}{% define empty page, e.g. back of cover
+    \fancyhf{}
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}
+}
+
+\title{\ziju{0.2}
+    \textbf{毛詩詁訓傳箋}
+
+    {\small 附詩經注析略抄}
+}
+\author{}
+\date{}
