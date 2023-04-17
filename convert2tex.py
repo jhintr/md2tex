@@ -23,10 +23,8 @@ def make_section(contents):
     """
     replace `#### ` to `\section{}`
     """
-    sect_re = r"#### (.*)"
 
     def proc_sect(sect):
-        """process section text"""
         # remove anything after {}
         text = sect.split("{")[0].strip()
         # if has <small> tag, change to \section
@@ -42,6 +40,7 @@ def make_section(contents):
             text = "\section*{%s}" % text
         return text
 
+    sect_re = r"#### (.*)"
     contents = re.sub(sect_re, lambda match: proc_sect(match.group(1)), contents)
     return contents
 
@@ -50,14 +49,13 @@ def make_subsection(contents):
     """
     replace `##### ` to `\subsection{}`
     """
-    sub_re = r"##### (.*)"
 
     def proc_sub(sect):
-        """process section text"""
         text = sect.split("{")[0].strip()
         text = "\subsection*{%s}" % text
         return text
 
+    sub_re = r"##### (.*)"
     contents = re.sub(sub_re, lambda match: proc_sub(match.group(1)), contents)
     return contents
 
@@ -91,9 +89,15 @@ def convert2tex(source: str, target: str):
             contents = re.sub(r"\[(.*?)\]\((.*?)\)", r"\1", contents)
 
             # deal with multilines
+            sign_re = r"^\{\{<sign>\}\}(.*)\{\{</sign>\}\}$"
+            sign_pa = r"%%\begin{flushright}%s\end{flushright}"
+
+            quot_re = r"^> (.*)$"
+            quot_pa = r"\begin{quoting}%s\end{quoting}"
+
             multilines = {
-                r"^\{\{<sign>\}\}(.*)\{\{</sign>\}\}$": r"%%\begin{flushright}%s\end{flushright}",
-                r"^> (.*)$": r"\begin{quoting}%s\end{quoting}",
+                sign_re: sign_pa,
+                quot_re: quot_pa,
             }
             for regex, patt in multilines.items():
                 contents = re.sub(
@@ -131,6 +135,7 @@ def convert2tex(source: str, target: str):
             for regex, patt in inlines.items():
                 contents = re.sub(regex, lambda match: patt % match.group(1), contents)
 
+            # deal with multiple blank lines
             def remove_n_blank(contents):
                 """remove \n\n\n"""
                 regex = r"\n\n\n"
