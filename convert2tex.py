@@ -10,7 +10,7 @@ def make_chapter(contents):
     match = re.search(fm_re, contents, re.DOTALL)
     if match:
         frontmatter = match.group(0)
-        title_re = r'^title: (.*)$'
+        title_re = r"^title: (.*)$"
         title_match = re.search(title_re, frontmatter, re.MULTILINE)
         if title_match:
             title = title_match.group(1)
