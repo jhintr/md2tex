@@ -10,11 +10,11 @@ def make_chapter(contents):
     match = re.search(fm_re, contents, re.DOTALL)
     if match:
         frontmatter = match.group(0)
-        title_re = r'^title: "(.*)"$'
+        title_re = r'^title: (.*)$'
         title_match = re.search(title_re, frontmatter, re.MULTILINE)
         if title_match:
             title = title_match.group(1)
-            title = r"\\chapter{%s}" % title
+            title = r"\\chapter{%s}\n" % title.strip('"').strip("'")
             contents = re.sub(fm_re, title, contents, flags=re.DOTALL)
     return contents
 
@@ -46,6 +46,22 @@ def make_section(contents):
     return contents
 
 
+def make_subsection(contents):
+    """
+    replace `##### ` to `\subsection{}`
+    """
+    sub_re = r"##### (.*)"
+
+    def proc_sub(sect):
+        """process section text"""
+        text = sect.split("{")[0].strip()
+        text = "\subsection*{%s}" % text
+        return text
+
+    contents = re.sub(sub_re, lambda match: proc_sub(match.group(1)), contents)
+    return contents
+
+
 def convert2tex(source: str, target: str):
     """Convert `.md` files to `.tex`.
 
@@ -65,6 +81,7 @@ def convert2tex(source: str, target: str):
                 contents = f.read()
 
             contents = make_chapter(contents)
+            contents = make_subsection(contents)
             contents = make_section(contents)
 
             # remove 詩譜
@@ -87,7 +104,7 @@ def convert2tex(source: str, target: str):
                 )
 
             # deal with normal para: after multilines, so not starts with `\`
-            def _proc_para(match):
+            def proc_para(match):
                 """if text not in the `<small>`, bold it"""
                 text = match.group(0)
                 text = re.split(r"(<small>.*?</small>)", text)
@@ -100,7 +117,7 @@ def convert2tex(source: str, target: str):
             if filename != "shi-pu.md":
                 contents = re.sub(
                     r"^([^\\\n\%])(.*)$",  # not starts with `\` or `\n` or `%`
-                    lambda match: _proc_para(match),
+                    lambda match: proc_para(match),
                     contents,
                     flags=re.MULTILINE,
                 )
