@@ -46,10 +46,15 @@ def make_section(contents):
     return contents
 
 
-def convert2tex():
-    # Define the input and output directories
-    input_dir = r"../ehipassa/content/classic/shi"
-    output_dir = "shi"
+def convert2tex(source: str, target: str):
+    """Convert `.md` files to `.tex`.
+
+    Parameters:
+        source: source dir in ehipassa/content/, e.g. "classic/shi"
+        target: target dir in content/
+    """
+    input_dir = r"../ehipassa/content/" + source
+    output_dir = "content/" + target
 
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -62,7 +67,7 @@ def convert2tex():
             contents = make_chapter(contents)
             contents = make_section(contents)
 
-            # remove 詩譜: SPECIFIC
+            # remove 詩譜
             contents = re.sub(r"^> \[\*\*詩譜.*$", "", contents, flags=re.MULTILINE)
 
             # remove hyperlinks
@@ -94,7 +99,7 @@ def convert2tex():
 
             if filename != "shi-pu.md":
                 contents = re.sub(
-                    r"^([^\\\n\%])(.*)$",  # not starts with \ or \n or %
+                    r"^([^\\\n\%])(.*)$",  # not starts with `\` or `\n` or `%`
                     lambda match: _proc_para(match),
                     contents,
                     flags=re.MULTILINE,
@@ -125,4 +130,19 @@ def convert2tex():
 
 
 if __name__ == "__main__":
-    convert2tex()
+    from argparse import ArgumentParser
+
+    parser = ArgumentParser(description="Convert `.md` files to `.tex`.")
+    parser.add_argument(
+        "source",
+        type=str,
+        help="specify source dir in ehipassa/content/, e.g. `classic/shi`",
+    )
+    parser.add_argument(
+        "target",
+        type=str,
+        help="specify target dir in content/",
+    )
+    args = parser.parse_args()
+
+    convert2tex(args.source, args.target)

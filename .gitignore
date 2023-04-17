@@ -1,7 +1,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/macos,tex,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,tex,python
 
-shi*/
+# converted .tex dir
+content/
 
 ### macOS ###
 # General
