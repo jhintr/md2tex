@@ -85,6 +85,19 @@ def convert2tex(source: str, target: str):
             # remove 詩譜
             contents = re.sub(r"^> \[\*\*詩譜.*$", "", contents, flags=re.MULTILINE)
 
+            # deal with footnote
+            # on one condition: fn markers in .md shouldn't duplicate
+            fn_list = re.findall(
+                r"^(\[\^\d+\]): (.*?)$",
+                contents,
+                flags=re.MULTILINE,
+            )
+            for fn in fn_list:
+                _marker, _note = fn
+                full_fn = ": ".join(fn)
+                contents = contents.replace(full_fn, "")
+                contents = contents.replace(_marker, r"\footnote{%s}" % _note)
+
             # remove hyperlinks
             contents = re.sub(r"\[(.*?)\]\((.*?)\)", r"\1", contents)
 
