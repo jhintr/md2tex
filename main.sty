@@ -1,11 +1,18 @@
 \usepackage[top=25mm, bottom=22mm, left=25mm, right=25mm]{geometry}
+\usepackage{graphicx}
 \usepackage{parskip}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{quoting}
+\usepackage{hyperref}
+\usepackage[hang]{footmisc}
+
+\graphicspath{ {./image/} }
+
 \setlength{\parskip}{1em}
 \setlength{\parindent}{0mm}
-
-\usepackage[hang]{footmisc}
-\setlength{\footnotemargin}{3ex}
 \setlength{\footnotesep}{1em}
+\setlength{\footnotemargin}{3ex}
 
 \linespread{1.5}
 
@@ -21,19 +28,10 @@
     contentsname = 目次,
 }
 
-\usepackage{titlesec} % for customizing section headings
 \setcounter{secnumdepth}{0} % remove section numbering
 \titlespacing*{\section}{0pt}{5mm plus 2mm minus 1mm}{4mm plus 2mm minus 1mm} % spacing around section
 \titlespacing*{\subsection}{0pt}{3mm plus 1mm minus 1mm}{3mm plus 1mm minus 1mm}
 
-\usepackage{quoting} % for setting quote margins
-\quotingsetup{
-    leftmargin=2em,
-    rightmargin=0em,
-    % font=footnotesize,
-}
-
-\usepackage{fancyhdr}
 \fancyhf{}
 % \fancyhead[LE,RO]{\small \thepage} % page number on even (L) and odd (R) pages
 % \fancyhead[RE]{\small \leftmark} % chapter title on even pages
@@ -54,4 +52,8 @@
     \renewcommand{\footrulewidth}{0pt}
 }
 
-\usepackage{hyperref}
+\quotingsetup{
+    leftmargin=2em,
+    rightmargin=0em,
+    % font=footnotesize,
+}
