@@ -4,7 +4,7 @@
 \usepackage{enumitem}
 \usepackage{fancyhdr}
 \usepackage{quoting}
-\usepackage[hang]{footmisc}
+\usepackage[hang, perpage]{footmisc}
 
 \setlength{\parskip}{1em}
 \setlength{\parindent}{0mm}
@@ -20,8 +20,7 @@
 }
 
 \fancyhf{}
-\fancyhead[RO]{\footnotesize \rightmark \hspace{5mm} \thepage}
-\fancyhead[LE]{\footnotesize \thepage \hspace{5mm} \leftmark}
+\fancyfoot[C]{\small \thepage}
 \pagestyle{fancy}
 \renewcommand{\headrulewidth}{0pt}
 \fancypagestyle{plain}{% define first page of a chapter
