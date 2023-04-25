@@ -60,15 +60,17 @@ def make_subsection(contents):
     return contents
 
 
-def convert2tex(source: str, target: str):
+def convert2tex(source: str, bold: bool = False):
     """Convert `.md` files to `.tex`.
 
     Parameters:
         source: source dir in ehipassa/content/, e.g. "classic/shi"
-        target: target dir in content/
+        bold: if set normal para text to boldface
     """
-    input_dir = r"../ehipassa/content/" + source
-    output_dir = "content/" + target
+    _source = source.strip("/")
+    _source_last = _source.split("/")[-1]
+    input_dir = r"../ehipassa/content/" + _source
+    output_dir = "content/" + _source_last
 
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -131,7 +133,7 @@ def convert2tex(source: str, target: str):
                 text = "".join(text).replace(r"\textbf{}", "")
                 return text
 
-            if filename != "shi-pu.md":
+            if bold and filename != "shi-pu.md":
                 contents = re.sub(
                     r"^([^\\\n\%])(.*)$",  # not starts with `\` or `\n` or `%`
                     lambda match: proc_para(match),
@@ -174,10 +176,11 @@ if __name__ == "__main__":
         help="specify source dir in ehipassa/content/, e.g. `classic/shi`",
     )
     parser.add_argument(
-        "target",
-        type=str,
-        help="specify target dir in content/",
+        "-b",
+        "--bold",
+        action="store_true",
+        help="set normal para text to boldface",
     )
     args = parser.parse_args()
 
-    convert2tex(args.source, args.target)
+    convert2tex(args.source, args.bold)
