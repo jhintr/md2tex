@@ -2,7 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,tex,python
 
 # converted .tex dir
-content/
+# content/
 
 ### macOS ###
 # General
