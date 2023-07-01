@@ -1,66 +1,17 @@
 import os
 import re
+from pytex.headings import frontmatter, heading
+from pytex.misc import (
+    bolded_normal_para,
+    inlines,
+    make_footnote,
+    multilines,
+    remove_link,
+    remove_n_blank,
+)
 
 
-def make_chapter(contents):
-    """
-    find the frontmatter and replace `title: ""` to `\chapter{}`
-    """
-    fm_re = r"^---\n(.*?)\n---\n"
-    match = re.search(fm_re, contents, re.DOTALL)
-    if match:
-        frontmatter = match.group(0)
-        title_re = r"^title: (.*)$"
-        title_match = re.search(title_re, frontmatter, re.MULTILINE)
-        if title_match:
-            title = title_match.group(1)
-            title = r"\\chapter{%s}\n" % title.strip('"').strip("'")
-            contents = re.sub(fm_re, title, contents, flags=re.DOTALL)
-    return contents
-
-
-def make_section(contents):
-    """
-    replace `#### ` to `\section{}`
-    """
-
-    def proc_sect(sect):
-        # remove anything after {}
-        text = sect.split("{")[0].strip()
-        # if has <small> tag, change to \section
-        if "<small>" in sect:
-            text = text.split(" ")
-            text0 = "\section{%s}" % text[0]
-            text1 = (
-                text[1].replace("<small>", "%{\\footnotesize ").replace("</small>", "}")
-            )
-            text = text0 + "\n\n" + text1
-        # otherwise, to \section*
-        else:
-            text = "\section*{%s}" % text
-        return text
-
-    sect_re = r"#### (.*)"
-    contents = re.sub(sect_re, lambda match: proc_sect(match.group(1)), contents)
-    return contents
-
-
-def make_subsection(contents):
-    """
-    replace `##### ` to `\subsection{}`
-    """
-
-    def proc_sub(sect):
-        text = sect.split("{")[0].strip()
-        text = "\subsection*{%s}" % text
-        return text
-
-    sub_re = r"##### (.*)"
-    contents = re.sub(sub_re, lambda match: proc_sub(match.group(1)), contents)
-    return contents
-
-
-def convert2tex(source: str, bold: bool = False):
+def convert2tex(source: str, bold: bool = False, is_section: bool = False):
     """Convert `.md` files to `.tex`.
 
     Parameters:
@@ -80,85 +31,50 @@ def convert2tex(source: str, bold: bool = False):
             with open(os.path.join(input_dir, filename), "r") as f:
                 contents = f.read()
 
-            contents = make_chapter(contents)
-            contents = make_subsection(contents)
-            contents = make_section(contents)
+            contents = frontmatter(contents, not is_section)
+            contents = heading(contents, "#####")
+            contents = heading(contents, "####")
 
-            # remove 詩譜
+            # 例外：删除 /shi 中「詩譜」的链接
             contents = re.sub(r"^> \[\*\*詩譜.*$", "", contents, flags=re.MULTILINE)
 
-            # deal with footnote
-            # on one condition: fn markers in .md shouldn't duplicate
-            fn_list = re.findall(
-                r"^(\[\^\d+\]): (.*?)$",
+            # 删除 namo
+            contents = re.sub(r"^\{\{<namo>\}\}$", "", contents, flags=re.MULTILINE)
+
+            contents = make_footnote(contents)
+            contents = remove_link(contents)
+
+            # replace eof with center
+            contents = re.sub(
+                r"\{\{<eof>\}\}",
+                r"\\begin{center}\\vspace{1em}",
                 contents,
                 flags=re.MULTILINE,
             )
-            for fn in fn_list:
-                _marker, _note = fn
-                full_fn = ": ".join(fn)
-                contents = contents.replace(full_fn, "")
-                contents = contents.replace(_marker, r"\footnote{%s}" % _note)
+            contents = re.sub(
+                r"\{\{</eof>\}\}",
+                r"\\end{center}",
+                contents,
+                flags=re.MULTILINE,
+            )
 
-            # remove hyperlinks
-            contents = re.sub(r"\[(.*?)\]\((.*?)\)", r"\1", contents)
+            # replace <br> with \\
+            contents = re.sub(r"  $", r"\\\\", contents, flags=re.MULTILINE)
+            contents = re.sub(r"<br>", r"\\\\", contents)
 
-            # deal with multilines
-            sign_re = r"^\{\{<sign>\}\}(.*)\{\{</sign>\}\}$"
-            sign_pa = r"%%\begin{flushright}%s\end{flushright}"
+            contents = multilines(contents)
 
-            quot_re = r"^> (.*)$"
-            quot_pa = r"\begin{quoting}%s\end{quoting}"
-
-            multilines = {
-                sign_re: sign_pa,
-                quot_re: quot_pa,
-            }
-            for regex, patt in multilines.items():
+            # 加粗正文段落：即不以 `\`,`\n`,`%` 开头的段落
+            except_md = ["shi-pu.md"]
+            if bold and filename not in except_md:
                 contents = re.sub(
-                    regex,
-                    lambda match: patt % match.group(1),
+                    r"^([^\\\n\%])(.*)$",
+                    lambda match: bolded_normal_para(match),
                     contents,
                     flags=re.MULTILINE,
                 )
 
-            # deal with normal para: after multilines, so not starts with `\`
-            def proc_para(match):
-                """if text not in the `<small>`, bold it"""
-                text = match.group(0)
-                text = re.split(r"(<small>.*?</small>)", text)
-                text = [
-                    t if t.startswith("<small>") else r"\textbf{%s}" % t for t in text
-                ]
-                text = "".join(text).replace(r"\textbf{}", "")
-                return text
-
-            if bold and filename != "shi-pu.md":
-                contents = re.sub(
-                    r"^([^\\\n\%])(.*)$",  # not starts with `\` or `\n` or `%`
-                    lambda match: proc_para(match),
-                    contents,
-                    flags=re.MULTILINE,
-                )
-
-            # deal with inline stuff
-            inlines = {
-                r"`(.*?)`": r"\texttt{%s}",
-                r"\*\*(.*?)\*\*": r"\textbf{%s}",
-                r"<small>(.*?)</small>": r"{\footnotesize %s}",
-            }
-            for regex, patt in inlines.items():
-                contents = re.sub(regex, lambda match: patt % match.group(1), contents)
-
-            # deal with multiple blank lines
-            def remove_n_blank(contents):
-                """remove \n\n\n"""
-                regex = r"\n\n\n"
-                contents = re.sub(regex, r"\n\n", contents)
-                if re.search(regex, contents, flags=re.MULTILINE):
-                    contents = remove_n_blank(contents)
-                return contents
-
+            contents = inlines(contents)
             contents = remove_n_blank(contents)
 
             out_file = os.path.join(output_dir, os.path.splitext(filename)[0] + ".tex")
@@ -181,6 +97,12 @@ if __name__ == "__main__":
         action="store_true",
         help="set normal para text to boldface",
     )
+    parser.add_argument(
+        "-s",
+        "--section",
+        action="store_true",
+        help="set title to section",
+    )
     args = parser.parse_args()
 
-    convert2tex(args.source, args.bold)
+    convert2tex(args.source, args.bold, args.section)
