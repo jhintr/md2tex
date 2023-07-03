@@ -8,6 +8,7 @@ from pytex.misc import (
     multilines,
     remove_link,
     remove_n_blank,
+    replace_shortcode,
 )
 
 
@@ -45,18 +46,8 @@ def convert2tex(source: str, bold: bool = False, is_section: bool = False):
             contents = remove_link(contents)
 
             # replace eof with center
-            contents = re.sub(
-                r"\{\{<eof>\}\}",
-                r"\\begin{center}\\vspace{1em}",
-                contents,
-                flags=re.MULTILINE,
-            )
-            contents = re.sub(
-                r"\{\{</eof>\}\}",
-                r"\\end{center}",
-                contents,
-                flags=re.MULTILINE,
-            )
+            contents = replace_shortcode(contents, "eof", "center", r"\\vspace{1em}")
+            contents = replace_shortcode(contents, "bqgatha", "quoting", "")
 
             # replace <br> with \\
             contents = re.sub(r"  $", r"\\\\", contents, flags=re.MULTILINE)

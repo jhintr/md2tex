@@ -70,11 +70,19 @@ def multilines(contents):
     subtitle_re = r"^\{\{<subtitle>\}\}(.*)\{\{</subtitle>\}\}$"
     subtitle_pa = r"\begin{center}%s\end{center}\vspace{1em}"
 
+    q_re = r"<q>(.*?)</q>$"
+    q_pa = r"\hfill{\footnotesize %s}"
+
+    q_re_ = r"^<q>(.*?)</q>"
+    q_pa_ = r"\hspace{1em}〔%s〕"
+
     multilines = {
         sign_re: sign_pa,
         quot_re_: quot_pa,
         quot_re: quot_pa,
         subtitle_re: subtitle_pa,
+        q_re: q_pa,
+        q_re_: q_pa_,
     }
     for regex, patt in multilines.items():
         contents = re.sub(
@@ -91,8 +99,29 @@ def inlines(contents):
         r"`(.*?)`": r"\texttt{%s}",
         r"\*\*(.*?)\*\*": r"\textbf{%s}",
         r"\*(.*?)\*": r"\textit{%s}",
-        r"<small>(.*?)</small>": r"{\footnotesize %s}",
+        r"<small>(.*?)</small>": r"\textit{%s}\\\hspace*{2em}",
     }
     for regex, patt in inlines.items():
         contents = re.sub(regex, lambda match: patt % match.group(1), contents)
+    return contents
+
+
+def replace_shortcode(contents: str, tag: str, dest: str, ex: str):
+    """
+    replace hugo shortcode
+    """
+
+    contents = re.sub(
+        r"\{\{<%s>\}\}" % tag,
+        r"\\begin{%s}%s" % (dest, ex),
+        contents,
+        flags=re.MULTILINE,
+    )
+    contents = re.sub(
+        r"\{\{</%s>\}\}" % tag,
+        r"\\end{%s}" % dest,
+        contents,
+        flags=re.MULTILINE,
+    )
+
     return contents
