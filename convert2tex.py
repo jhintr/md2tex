@@ -10,6 +10,7 @@ from pytex.misc import (
     remove_n_blank,
     replace_shortcode,
 )
+from pytex.snp import gatha_number
 
 
 def convert2tex(source: str, bold: bool = False, is_section: bool = False):
@@ -67,6 +68,7 @@ def convert2tex(source: str, bold: bool = False, is_section: bool = False):
 
             contents = inlines(contents)
             contents = remove_n_blank(contents)
+            contents = gatha_number(contents)
 
             out_file = os.path.join(output_dir, os.path.splitext(filename)[0] + ".tex")
             with open(out_file, "w") as f:

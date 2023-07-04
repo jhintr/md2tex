@@ -71,7 +71,7 @@ def multilines(contents):
     subtitle_pa = r"\begin{center}%s\end{center}\vspace{1em}"
 
     q_re = r"<q>(.*?)</q>$"
-    q_pa = r"\hfill{\footnotesize %s}"
+    q_pa = r"\hfill\textcolor{gray}{\footnotesize %s}"
 
     q_re_ = r"^<q>(.*?)</q>"
     q_pa_ = r"\hspace{1em}〔%s〕"
