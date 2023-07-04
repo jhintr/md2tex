@@ -99,7 +99,10 @@ def inlines(contents):
         r"`(.*?)`": r"\texttt{%s}",
         r"\*\*(.*?)\*\*": r"\textbf{%s}",
         r"\*(.*?)\*": r"\textit{%s}",
+        r"<em>(.*?)</em>": r"\textit{%s}",
         r"<small>(.*?)</small>": r"\textit{%s}\\\hspace*{2em}",
+        r"<sup>(.*?)</sup>": r"\textsuperscript{%s}",
+        r"<a href=\".*?\">(.*?)</a>": r"%s",
     }
     for regex, patt in inlines.items():
         contents = re.sub(regex, lambda match: patt % match.group(1), contents)
