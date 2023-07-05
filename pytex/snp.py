@@ -47,7 +47,7 @@ def gatha_number(contents):
             num = r"763\textit{c-f}"
         else:
             num -= 7
-        return r"\subsection\*{%s\hfill\textcolor{gray}{\footnotesize PTS %s}}" % (
+        return r"\subsection\*{%s \textcolor{gray}{\footnotesize 〔%s〕}}" % (
             _num,
             num,
         )

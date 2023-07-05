@@ -96,7 +96,7 @@ def inlines(contents):
         r"\*\*(.*?)\*\*": r"\textbf{%s}",
         r"\*(.*?)\*": r"\textit{%s}",
         r"<em>(.*?)</em>": r"\textit{%s}",
-        r"<small>(.*?)</small>": r"\textit{%s}\\\hspace*{2em}",
+        r"<small>(.*?)</small>": r"\textit{%s}",
         r"<sup>(.*?)</sup>": r"\textsuperscript{%s}",
         r"<a href=\".*?\">(.*?)</a>": r"%s",
     }
