@@ -73,16 +73,12 @@ def multilines(contents):
     q_re = r"<q>(.*?)</q>$"
     q_pa = r"\hfill\textcolor{gray}{\footnotesize %s}"
 
-    q_re_ = r"^<q>(.*?)</q>"
-    q_pa_ = r"\hspace{1em}〔%s〕"
-
     multilines = {
         sign_re: sign_pa,
         quot_re_: quot_pa,
         quot_re: quot_pa,
         subtitle_re: subtitle_pa,
         q_re: q_pa,
-        q_re_: q_pa_,
     }
     for regex, patt in multilines.items():
         contents = re.sub(

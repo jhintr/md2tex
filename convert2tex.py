@@ -33,6 +33,8 @@ def convert2tex(source: str, bold: bool = False, is_section: bool = False):
             with open(os.path.join(input_dir, filename), "r") as f:
                 contents = f.read()
 
+            contents = contents.replace("⋯⋯", "……")
+
             contents = frontmatter(contents, not is_section)
             contents = heading(contents, "#####")
             contents = heading(contents, "####")
