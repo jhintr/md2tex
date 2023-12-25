@@ -40,7 +40,7 @@ def convert2tex(source: str, bold: bool = False, is_section: bool = False):
             contents = heading(contents, "####")
 
             # 例外：删除 /shi 中「詩譜」的链接
-            contents = re.sub(r"^> \[\*\*詩譜.*$", "", contents, flags=re.MULTILINE)
+            contents = re.sub(r"^> - \[\*\*詩譜.*$", "", contents, flags=re.MULTILINE)
 
             # 删除 namo
             contents = re.sub(r"^\{\{<namo>\}\}$", "", contents, flags=re.MULTILINE)
