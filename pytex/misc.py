@@ -14,13 +14,24 @@ def remove_link(contents):
     return contents
 
 
+def remove_figure(contents):
+    """
+    remove `{{<figure>}}`
+    """
+
+    figure_re = r"\{\{<figure (.*?)>\}\}"
+    contents = re.sub(figure_re, "", contents)
+
+    return contents
+
+
 def make_footnote(contents):
     """
     NOTICE: fn markers in `.md` shouldn't be duplicated
     """
 
     fn_list = re.findall(
-        r"^(\[\^\d+\]): (.*?)$",
+        r"^(\[\^.*?\]): (.*?)$",
         contents,
         flags=re.MULTILINE,
     )
@@ -63,7 +74,8 @@ def multilines(contents):
     sign_re = r"^\{\{<sign>\}\}(.*)\{\{</sign>\}\}$"
     sign_pa = r"%%\begin{flushright}%s\end{flushright}"
 
-    quot_re_ = r"^> - (.*)$"
+    quot_re_1 = r"^> - (.*)$"
+    quot_re_2 = r"^> 1. (.*)$"
     quot_re = r"^> (.*)$"
     quot_pa = r"\begin{quoting}%s\end{quoting}"
 
@@ -75,7 +87,8 @@ def multilines(contents):
 
     multilines = {
         sign_re: sign_pa,
-        quot_re_: quot_pa,
+        quot_re_1: quot_pa,
+        quot_re_2: quot_pa,
         quot_re: quot_pa,
         subtitle_re: subtitle_pa,
         q_re: q_pa,
@@ -96,8 +109,11 @@ def inlines(contents):
         r"\*\*(.*?)\*\*": r"\textbf{%s}",
         r"\*(.*?)\*": r"\textit{%s}",
         r"<em>(.*?)</em>": r"\textit{%s}",
+        r"<i>(.*?)</i>": r"\textit{%s}",
+        r"<div>(.*?)</div>": r"\begin{quoting}%s\end{quoting}",
         r"<small>(.*?)</small>": r"{\footnotesize %s}",
         r"<sup>(.*?)</sup>": r"\textsuperscript{%s}",
+        r"<span class=\"pi\">(.*?)</span>": r"%s",
         r"<a href=\".*?\">(.*?)</a>": r"%s",
     }
     for regex, patt in inlines.items():

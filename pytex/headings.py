@@ -45,7 +45,7 @@ def frontmatter(contents: str, title_is_chapter: bool = True):
 
 def heading(contents: str, h4h5: str):
     """
-    change `#### ` or `##### ` to `section` or `subsection`
+    change `### ` or `#### ` to `section` or `subsection`
     """
 
     def _proc(heading: str, dest: str):
@@ -55,6 +55,6 @@ def heading(contents: str, h4h5: str):
         return text
 
     _re = r"%s (.*)" % h4h5
-    _dest = "section" if h4h5 == "####" else "subsection*"
+    _dest = "section" if h4h5 == "###" else "subsection*"
     contents = re.sub(_re, lambda match: _proc(match.group(1), _dest), contents)
     return contents

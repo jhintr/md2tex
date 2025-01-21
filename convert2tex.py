@@ -6,6 +6,7 @@ from pytex.misc import (
     inlines,
     make_footnote,
     multilines,
+    remove_figure,
     remove_link,
     remove_n_blank,
     replace_shortcode,
@@ -36,8 +37,8 @@ def convert2tex(source: str, bold: bool = False, is_section: bool = False):
             contents = contents.replace("⋯⋯", "……")
 
             contents = frontmatter(contents, not is_section)
-            contents = heading(contents, "#####")
             contents = heading(contents, "####")
+            contents = heading(contents, "###")
 
             # 例外：删除 /shi 中「詩譜」的链接
             contents = re.sub(r"^> - \[\*\*詩譜.*$", "", contents, flags=re.MULTILINE)
@@ -46,15 +47,17 @@ def convert2tex(source: str, bold: bool = False, is_section: bool = False):
             contents = re.sub(r"^\{\{<namo>\}\}$", "", contents, flags=re.MULTILINE)
 
             contents = make_footnote(contents)
+            contents = remove_figure(contents)
             contents = remove_link(contents)
 
             # replace eof with center
             contents = replace_shortcode(contents, "eof", "center", r"\\vspace{1em}")
-            contents = replace_shortcode(contents, "bqgatha", "quoting", "")
 
             # replace <br> with \\
             contents = re.sub(r"  $", r"\\\\", contents, flags=re.MULTILINE)
             contents = re.sub(r"<br>", r"\\\\", contents)
+
+            contents = contents.replace("{.pi}", "")
 
             contents = multilines(contents)
 
