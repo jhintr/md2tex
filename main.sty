@@ -8,6 +8,7 @@
 \usepackage{quoting}
 \usepackage[hang, perpage]{footmisc}
 \usepackage{xcolor}
+\usepackage{needspace}
 
 \graphicspath{ {./image/} }
 
@@ -60,4 +61,10 @@
     leftmargin=2em,
     rightmargin=0em,
     % font=footnotesize,
+}
+
+\let\oldsubsection\subsection
+\renewcommand{\subsection}[1]{
+    \needspace{3\baselineskip} % 确保有至少 3 行的空间
+    \oldsubsection{#1}%
 }

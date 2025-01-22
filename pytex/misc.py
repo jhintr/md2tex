@@ -101,6 +101,9 @@ def multilines(contents):
             contents,
             flags=re.MULTILINE,
         )
+
+    duplicate = re.compile(r"\\end{enumerate}\s*\\begin{enumerate}")
+    contents = duplicate.sub("\n", contents)
     return contents
 
 
