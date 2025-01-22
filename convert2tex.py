@@ -39,6 +39,7 @@ def convert2tex(source: str, bold: bool = False, is_section: bool = False):
             contents = frontmatter(contents, not is_section)
             contents = heading(contents, "####")
             contents = heading(contents, "###")
+            contents = contents.replace("---", "")
 
             # 例外：删除 /shi 中「詩譜」的链接
             contents = re.sub(r"^> - \[\*\*詩譜.*$", "", contents, flags=re.MULTILINE)
@@ -61,11 +62,11 @@ def convert2tex(source: str, bold: bool = False, is_section: bool = False):
 
             contents = multilines(contents)
 
-            # 加粗正文段落：即不以 `\`,`\n`,`%` 开头的段落
+            # 加粗正文段落：即不以 `\`,`\n`,`%` 与字母开头的段落
             except_md = ["shi-pu.md"]
             if bold and filename not in except_md:
                 contents = re.sub(
-                    r"^([^\\\n\%])(.*)$",
+                    r"^([^\\\n\%a-zA-Z“‘āĀīĪūŪñÑṭṬḍḌṇṆ])(.*)$",
                     lambda match: bolded_normal_para(match),
                     contents,
                     flags=re.MULTILINE,

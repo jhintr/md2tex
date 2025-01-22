@@ -74,21 +74,22 @@ def multilines(contents):
     sign_re = r"^\{\{<sign>\}\}(.*)\{\{</sign>\}\}$"
     sign_pa = r"%%\begin{flushright}%s\end{flushright}"
 
-    quot_re_1 = r"^> - (.*)$"
-    quot_re_2 = r"^> 1. (.*)$"
     quot_re = r"^> (.*)$"
+    quot_re_ul = r"^> - (.*)$"
     quot_pa = r"\begin{quoting}%s\end{quoting}"
+    quot_re_ol = r"^> 1. (.*)$"
+    quot_pa_ol = r"\begin{enumerate}\item %s\end{enumerate}"
 
     subtitle_re = r"^\{\{<subtitle>\}\}(.*)\{\{</subtitle>\}\}$"
     subtitle_pa = r"\begin{center}%s\end{center}\vspace{1em}"
 
     q_re = r"<q>(.*?)</q>$"
-    q_pa = r"\hfill\textcolor{gray}{\footnotesize %s}"
+    q_pa = r"%%\hfill\textcolor{gray}{\footnotesize %s}"
 
     multilines = {
         sign_re: sign_pa,
-        quot_re_1: quot_pa,
-        quot_re_2: quot_pa,
+        quot_re_ul: quot_pa,
+        quot_re_ol: quot_pa_ol,
         quot_re: quot_pa,
         subtitle_re: subtitle_pa,
         q_re: q_pa,
