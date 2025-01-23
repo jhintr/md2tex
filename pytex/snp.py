@@ -7,11 +7,10 @@ def gatha_number(contents):
     """
 
     def _proc(_num: str):
-        # remove anything after {}, which is heading's id in html
         num = int(_num)
         if num < 164:
-            num = num
-        elif num == 164:
+            return r"\subsection\*{\textbf{%s}}" % (_num)
+        if num == 164:
             num = "163A"
         elif num == 165:
             num = "163B"
@@ -47,7 +46,7 @@ def gatha_number(contents):
             num = r"763\textit{c-f}"
         else:
             num -= 7
-        return r"\subsection\*{%s \textcolor{gray}{\footnotesize 〔%s〕}}" % (
+        return r"\subsection\*{\textbf{%s} \textcolor{gray}{\footnotesize 〔%s〕}}" % (
             _num,
             num,
         )
