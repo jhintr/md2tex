@@ -76,6 +76,7 @@ def multilines(contents):
 
     quot_re = r"^> (.*)$"
     quot_re_ul = r"^> - (.*)$"
+    quot_pa_ul = r"\begin{itemize}\item %s\end{itemize}"
     quot_pa = r"\begin{quoting}%s\end{quoting}"
     quot_re_ol = r"^> 1. (.*)$"
     quot_pa_ol = r"\begin{enumerate}\item %s\end{enumerate}"
@@ -88,7 +89,7 @@ def multilines(contents):
 
     multilines = {
         sign_re: sign_pa,
-        quot_re_ul: quot_pa,
+        quot_re_ul: quot_pa_ul,
         quot_re_ol: quot_pa_ol,
         quot_re: quot_pa,
         subtitle_re: subtitle_pa,
