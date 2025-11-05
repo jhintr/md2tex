@@ -33,7 +33,7 @@
 }
 
 \setcounter{secnumdepth}{0} % remove section numbering
-\titlespacing*{\section}{0pt}{3mm plus 1mm minus 1mm}{3mm plus 1mm minus 1mm}
+\titlespacing*{\section}{0pt}{4mm plus 1mm minus 1mm}{4mm plus 1mm minus 1mm}
 \titlespacing*{\subsection}{0pt}{0mm plus 1mm minus 1mm}{0mm plus 1mm minus 1mm}
 
 \fancyhf{}
@@ -61,6 +61,6 @@
 
 \let\oldsubsection\subsection
 \renewcommand{\subsection}[1]{
-    \needspace{3\baselineskip} % 确保有至少 3 行的空间
+    \needspace{2\baselineskip} % 确保有至少 3 行的空间
     \oldsubsection{#1}%
 }
