@@ -1,5 +1,5 @@
 \documentclass[10pt, b5paper]{ctexbook}
-\usepackage[]{main}
+\usepackage[]{../main}
 
 \quotingsetup{
     font=normal,
@@ -8,7 +8,7 @@
 \let\oldsection\section
 \renewcommand{\section}[1]{
     \needspace{2\baselineskip} % 确保有至少 3 行的空间
-    \oldsection{#1}%
+    \oldsection{#1}
 }
 
 \title{\ziju{0.15}
@@ -29,15 +29,15 @@
 \tableofcontents
 
 \mainmatter
-\include{content/suttanipata/v1}
+\include{v1}
 \let\cleardoublepage\relax
-\include{content/suttanipata/v2}
+\include{v2}
 \let\cleardoublepage\relax
-\include{content/suttanipata/v3}
+\include{v3}
 \let\cleardoublepage\relax
-\include{content/suttanipata/v4}
+\include{v4}
 \let\cleardoublepage\relax
-\include{content/suttanipata/v5}
+\include{v5}
 \let\cleardoublepage\relax
 
 
