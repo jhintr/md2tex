@@ -1,0 +1,42 @@
+\documentclass[10pt, b5paper]{ctexbook}
+\usepackage[]{../main}
+
+\setCJKmainfont[
+    BoldFont=STHeiti
+]{STSong}
+
+\quotingsetup{
+    font=normal,
+}
+\ctexset{
+    tocdepth = subsection,
+    chapter/format += \LARGE,
+    section/format += \Large,
+    subsection/format += \large\centering,
+}
+
+\title{\ziju{0.15}
+    \textbf{长部}\\\Large{兼其义注}
+}
+\author{\ziju{0.1}
+    邵勤之}
+\date{\ziju{0.15}
+    \vspace{\fill}
+    \small{二〇二六年九月}
+}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\frontmatter
+\tableofcontents
+
+\mainmatter
+\include{00}
+\let\cleardoublepage\relax
+\include{01}
+\let\cleardoublepage\relax
+
+\end{document}
